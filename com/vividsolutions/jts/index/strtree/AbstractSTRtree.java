@@ -33,6 +33,7 @@
  */
 package com.vividsolutions.jts.index.strtree;
 
+import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.index.ItemVisitor;
 import com.vividsolutions.jts.util.*;
 
@@ -461,5 +462,58 @@ public abstract class AbstractSTRtree implements Serializable {
   }
 
   protected abstract Comparator getComparator();
-
+/**
+ * This function traverses the boundaries of all leaf nodes.
+ * This function should be called after all insertions.
+ * @return The list of lea nodes boundaries
+ */
+protected List queryBoundary() 
+  {
+	    build();
+	    List boundaries = new ArrayList();
+	    if (isEmpty()) {
+	      //Assert.isTrue(root.getBounds() == null);
+	    //If the root is empty, we stop traversing. This should not happen.
+	      return boundaries;
+	    }
+	   
+	    queryBoundary(root, boundaries);
+	    
+	    return boundaries;
+  }
+/**
+ * This function is to traverse the children of the root.
+ * @param node
+ * @param boundaries
+ */
+private void queryBoundary(AbstractNode node, List boundaries) {
+    List childBoundables = node.getChildBoundables();
+    boolean flagLeafnode=true;
+    for (int i = 0; i < childBoundables.size(); i++) {
+      Boundable childBoundable = (Boundable) childBoundables.get(i);
+      if (childBoundable instanceof AbstractNode) {
+    	  //We find this is not a leaf node.
+    	flagLeafnode=false;
+    	break;
+        
+      }
+    }
+    if(flagLeafnode==true)
+    {
+    	boundaries.add((Envelope)node.getBounds());
+    	return;
+    }
+    else
+    {
+    	for (int i = 0; i < childBoundables.size(); i++) 
+    	{
+    		Boundable childBoundable = (Boundable) childBoundables.get(i);
+    		if (childBoundable instanceof AbstractNode) 
+    		{
+    			queryBoundary((AbstractNode) childBoundable, boundaries);
+    		}
+    		
+    	}
+    }
+  }
 }
