@@ -37,6 +37,7 @@ import com.vividsolutions.jts.index.strtree.AbstractSTRtree;
 
 import java.io.Serializable;
 import java.util.*;
+
 import com.vividsolutions.jts.geom.*;
 import com.vividsolutions.jts.util.*;
 import com.vividsolutions.jts.util.PriorityQueue;
@@ -389,5 +390,16 @@ implements SpatialIndex, Serializable
           ((ItemBoundable) minPair.getBoundable(1)).getItem()
       };
   }
+  /**
+   * This method is to find the boundaries of leaf nodes.
+   * @return Return the list of boundaries we find.
+   */
+  public List queryBoundary()
+    {
+
+      return super.queryBoundary();
+
+
+    }
 
 }

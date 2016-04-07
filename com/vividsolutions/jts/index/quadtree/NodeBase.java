@@ -248,5 +248,43 @@ public abstract class NodeBase implements Serializable {
     }
     return subSize + 1;
   }
+ 
+
+/**
+ * Visit all boundaries of all subnodes
+ * @param boundary
+ * @param visitor
+ */
+public void queryBoundary(Envelope boundary, ItemVisitor visitor)
+  {
+
+
+    //This flag marks whether this node is containing any subnodes. Once we find one subnode exists, 
+	//set the flag to true.
+	boolean hasSubnodes=false;
+
+    for (int i = 0; i < 4; i++) {
+        if (subnode[i] != null) {
+
+        	hasSubnodes=true;
+        }
+      }
+    //If we find no subnodes, we know this is a leaf node. Record the boundary of this leaf node and return.
+    if(hasSubnodes==false)
+    {
+    	visitor.visitItem(boundary);
+    	return;
+    }
+    //If we can go here, we find this node is a non-leaf node. We should go deeper.
+    for (int i = 0; i < 4; i++) {
+        if (subnode[i] != null) {
+
+        	hasSubnodes=true;
+        	subnode[i].queryBoundary(subnode[i].getEnvelope(),visitor);
+        }
+      }
+
+
+  }
 
 }

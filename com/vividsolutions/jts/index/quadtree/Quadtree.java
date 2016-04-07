@@ -67,6 +67,14 @@ import com.vividsolutions.jts.index.*;
  *
  * @version 1.7
  */
+/**
+ * @author sparkadmin
+ *
+ */
+/**
+ * @author sparkadmin
+ *
+ */
 public class Quadtree
     implements SpatialIndex, Serializable
 {
@@ -255,5 +263,22 @@ public class Quadtree
     if (delY < minExtent && delY > 0.0)
       minExtent = delY;
   }
+  
+/**
+ * This method is to find the boundaries of leaf nodes. Note that:
+ * this quad-tree may have items stored on its non-leaf nodes. Thus
+ * boundaries returned by this method cannot cover all items.
+ * @return Return the list of boundaries we find.
+ */
+public List queryBoundary()
+  {
+  	List<Envelope> grids=new ArrayList<Envelope>();
+    ArrayListVisitor visitor = new ArrayListVisitor();
+    root.queryBoundary(new Envelope(0.0,0.0,0.0,0.0),visitor);
+    grids=visitor.getItems();
+    
+  	return grids;
+  }
+
 
 }
