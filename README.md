@@ -8,7 +8,6 @@ JTS Topology Suite 1.14 with additional functions for GeoSpark
 ## Functions usage
 
 ### Spatial partitioning
-1. STR-Tree and Quad-Tree spatial data partitioning methods are built on top of JTS STR-Tree and Quad-Tree implementation.
 STR-Tree partitioning is as follows:
 
 ```java
