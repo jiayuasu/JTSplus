@@ -48,6 +48,7 @@ Please refer to [PartitioningQualityAnalysis](https://github.com/jiayuasu/JTSplu
 ## Contributor
 [Jia Yu](http://www.public.asu.edu/~jiayu2/) (Email: jiayu2@asu.edu)
 
+[Mohamed Sarwat](http://faculty.engineering.asu.edu/sarwat/) (Email: msarwat@asu.edu)
 ## Acknowledgement
 
 JTSplus makes use of JTS Topology Suite Version 1.14 for some spatial computations.
