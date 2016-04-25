@@ -2,14 +2,13 @@
 ## Introduction
 JTS Topology Suite 1.14 with additional functions for GeoSpark
 
-GeoSpark supports spatial data partitioning after loading spatial data into memory. 
+1. Spatial data partitioning: Add a function in STR-Tree and Quad-Tree to return the leaf nodes bounding envelopes as the boundaries of spatial partitions. 
+2. KNN query: Add K Nearest Neighbors in STR-Tree implementation. 
 
-Spatial data partitioning improves rang query, join query and KNN query through reducing unnecessary data shuffle across the cluster.
+## Functions usage
 
-Now supported spatial data partitioning techniques include: Load balanced grids, STR-Tree (in JTSplus) and Quad-Tree (in JTSplus).
-## Functions
-STR-Tree and Quad-Tree spatial data partitioning methods are built on top of JTS STR-Tree and Quad-Tree implementation.
-
+### Spatial partitioning
+1. STR-Tree and Quad-Tree spatial data partitioning methods are built on top of JTS STR-Tree and Quad-Tree implementation.
 STR-Tree partitioning is as follows:
 
 ```java
@@ -31,8 +30,17 @@ quadtree.insert();//Please insert spatial records
 ...
 quadtree.queryBoundary();
 ```
+### K Nearest Neighbors (KNN) query
 
-These functions return a list of boundaries which are parts of the entire spatial space.
+```java
+STRtree strtree = new STRtree();
+strtree.insert();//Please insert spatial records. Make sure you insert Geometry type object (instead of Envelope or others)
+...
+...
+...
+strtree.kNearestNeighbors(new Envelope(-98.6361828, -95.0993852,46.88333326666667,48.392923),fact.toGeometry(new Envelope(-98.6361828, -95.0993852,46.88333326666667,48.392923)),new GeometryItemDistance(), 10);
+```
+
 
 ## Example
 
