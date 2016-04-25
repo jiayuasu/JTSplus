@@ -5,7 +5,9 @@ import java.util.List;
 import java.util.Random;
 
 import com.vividsolutions.jts.geom.Envelope;
+import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.index.quadtree.Quadtree;
+import com.vividsolutions.jts.index.strtree.GeometryItemDistance;
 import com.vividsolutions.jts.index.strtree.STRtree;
 
 public class PartitioningQualityAnalysis {
@@ -13,8 +15,8 @@ public class PartitioningQualityAnalysis {
 	public static void main(String[] args) {
 
 		//Declare a partitioning method
-			Quadtree testtree=new Quadtree();
-		  //STRtree testtree=new STRtree();
+			//Quadtree testtree=new Quadtree();
+		  STRtree testtree=new STRtree();
 		  //Quadtree testtree=new Quadtree();
 		//This is to generate random test rectangles
 		Random rand = new Random();
@@ -29,6 +31,8 @@ public class PartitioningQualityAnalysis {
 		//Sum of records per boundary
 		int sum=0;
 		//Generate test data
+		GeometryFactory fact = new GeometryFactory();
+		
 		for(int i=0;i<totalTestRectangles;i=i+20)
 		{
 			
@@ -42,12 +46,13 @@ public class PartitioningQualityAnalysis {
 		//Build trees
 		for(int i=0;i<spatialobjects.size();i++)
 		{
-			testtree.insert(spatialobjects.get(i), new Envelope(0,0,0,0));
+			testtree.insert(spatialobjects.get(i), fact.toGeometry(spatialobjects.get(i)));
 			//Initialize object status in one go
 			spatialobjectsStatus.add(0);
 		}
 		//Retrieve boundaries
 		List<Envelope> boundaries=testtree.queryBoundary();
+		
 		System.out.println("This tree returns "+boundaries.size()+" boundaries");
 		//This is to print out boundaries and initialize each counter to 0
 		for(int i=0;i<boundaries.size();i++)
@@ -104,6 +109,12 @@ public class PartitioningQualityAnalysis {
 		
 		System.out.println("Total number of test rectangles: "+totalTestRectangles/20*5+"; Sum of counters: "+sum);
 		
+		Envelope[] knn = testtree.kNearestNeighbour(new Envelope(-98.6361828, -95.0993852,46.88333326666667,48.392923),fact.toGeometry(new Envelope(-98.6361828, -95.0993852,46.88333326666667,48.392923)),new GeometryItemDistance(), 10);
+		System.out.println("The K Nearest Neighbors are as follows: ");
+		for(Envelope e:knn)
+		{
+			System.out.println(e);
+		}
 	}
 
 }

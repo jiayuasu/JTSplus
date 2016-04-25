@@ -304,6 +304,29 @@ implements SpatialIndex, Serializable
     return nearestNeighbour(bp)[0];
   }
   
+  
+  /**
+   * Finds the item in this tree which is nearest to the given {@link Object}, 
+   * using {@link ItemDistance} as the distance metric.
+   * A Branch-and-Bound tree traversal algorithm is used
+   * to provide an efficient search.
+   * <p>
+   * The query <tt>object</tt> does <b>not</b> have to be 
+   * contained in the tree, but it does 
+   * have to be compatible with the <tt>itemDist</tt> 
+   * distance metric. 
+   * 
+   * @param env the envelope of the query item
+   * @param item the item to find the nearest neighbour of
+   * @param itemDist a distance metric applicable to the items in this tree and the query item
+   * @return the nearest item in this tree
+   */
+  public Envelope[] kNearestNeighbour(Envelope env, Object item, ItemDistance itemDist,int k)
+  {
+    Boundable bnd = new ItemBoundable(env, item);
+    BoundablePair bp = new BoundablePair(this.getRoot(), bnd, itemDist);
+    return nearestNeighbour(bp,k);
+  }
   /**
    * Finds the two nearest items from this tree 
    * and another tree,
@@ -328,7 +351,10 @@ implements SpatialIndex, Serializable
   {
     return nearestNeighbour(initBndPair, Double.POSITIVE_INFINITY);
   }
-  
+  private Envelope[] nearestNeighbour(BoundablePair initBndPair, int k) 
+  {
+    return nearestNeighbour(initBndPair, Double.POSITIVE_INFINITY,k);
+  }
   private Object[] nearestNeighbour(BoundablePair initBndPair, double maxDistance) 
   {
     double distanceLowerBound = maxDistance;
@@ -389,6 +415,118 @@ implements SpatialIndex, Serializable
           ((ItemBoundable) minPair.getBoundable(0)).getItem(),
           ((ItemBoundable) minPair.getBoundable(1)).getItem()
       };
+  }
+  
+  private Envelope[] nearestNeighbour(BoundablePair initBndPair, double maxDistance, int k) 
+  {
+    double distanceLowerBound = maxDistance;
+    BoundablePair minPair = null;
+    
+    // initialize internal structures
+    PriorityQueue priQ = new PriorityQueue();
+
+    // initialize queue
+    priQ.add(initBndPair);
+
+    List<Envelope> kNearestNeighbors = new ArrayList<Envelope> ();
+    List<Double> kNearestDistances = new ArrayList<Double>();
+    while (! priQ.isEmpty() && distanceLowerBound >= 0.0) {
+      // pop head of queue and expand one side of pair
+      BoundablePair bndPair = (BoundablePair) priQ.poll();
+      double currentDistance = bndPair.getDistance();
+      
+      
+      /**
+       * If the distance for the first node in the queue
+       * is >= the current maximum distance in the k queue , all other nodes
+       * in the queue must also have a greater distance.
+       * So the current minDistance must be the true minimum,
+       * and we are done.
+       */
+
+      if (currentDistance >= distanceLowerBound && kNearestDistances.size()>=k){
+    	  break;  
+      }
+      /**
+       * If the pair members are leaves
+       * then their distance is the exact lower bound.
+       * Update the distanceLowerBound to reflect this
+       * (which must be smaller, due to the test 
+       * immediately prior to this). 
+       */
+      if (bndPair.isLeaves()) {
+        // assert: currentDistance < minimumDistanceFound
+    	
+        //distanceLowerBound = currentDistance;
+    	  if(kNearestDistances.size()>0 && kNearestDistances.size()<k){
+
+    		  int position=Collections.binarySearch(kNearestDistances, currentDistance);
+	    	  	if(position<0)
+  	            {
+  	          	  position=-position-1;
+  	            }
+	    	  	kNearestNeighbors.add(position,(Envelope)bndPair.getBoundable(0).getBounds());
+  	        	kNearestDistances.add(position,currentDistance); 
+    	  }
+    	  else if(kNearestDistances.size()>=k)
+    	  {
+
+  	  		if(currentDistance<kNearestDistances.get(kNearestDistances.size()-1))
+  	  		{
+  	  			int position=Collections.binarySearch(kNearestDistances, currentDistance);
+  	    	  	if(position<0)
+  	            {
+  	          	  position=-position-1;
+  	            }
+  	    	  	kNearestNeighbors.add(position,(Envelope)bndPair.getBoundable(0).getBounds());
+  	        	kNearestDistances.add(position,currentDistance); 
+  	        	assert kNearestNeighbors.size()>k;
+  	        	kNearestNeighbors.remove(kNearestNeighbors.size()-1);
+  	        	kNearestDistances.remove(kNearestDistances.size()-1);
+  	  		}
+    	  }
+    	  else if(kNearestDistances.size()==0)
+    	  {
+    		  kNearestNeighbors.add((Envelope)bndPair.getBoundable(0).getBounds());
+    		  kNearestDistances.add(currentDistance);
+    	  }
+    	  else
+    	  {
+    		  try {
+				throw new Exception("Should never reach here");
+			} catch (Exception e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+    	  }
+     	  	   	  
+    	 
+        distanceLowerBound = kNearestDistances.get(kNearestDistances.size()-1);
+        //System.out.println("distanceLowerBound is " + distanceLowerBound);
+        
+        
+
+      }
+      else {
+        // testing - does allowing a tolerance improve speed?
+        // Ans: by only about 10% - not enough to matter
+        /*
+        double maxDist = bndPair.getMaximumDistance();
+        if (maxDist * .99 < lastComputedDistance) 
+          return;
+        //*/
+
+        /**
+         * Otherwise, expand one side of the pair,
+         * (the choice of which side to expand is heuristically determined) 
+         * and insert the new expanded pairs into the queue
+         */
+        bndPair.expandToQueue(priQ, distanceLowerBound);
+      }
+    }
+    // done - return items with min distance
+
+    return kNearestNeighbors.toArray(new Envelope[kNearestNeighbors.size()]);
   }
   /**
    * This method is to find the boundaries of leaf nodes.
