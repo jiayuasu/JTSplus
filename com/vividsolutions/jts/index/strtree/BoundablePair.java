@@ -32,6 +32,7 @@
  */
 package com.vividsolutions.jts.index.strtree;
 
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -213,19 +214,19 @@ class BoundablePair
     
     throw new IllegalArgumentException("neither boundable is composite");
   }
-  
+
   private void expand(Boundable bndComposite, Boundable bndOther,
-      PriorityQueue priQ, double minDistance)
-  {
-    List children = ((AbstractNode) bndComposite).getChildBoundables();
-    for (Iterator i = children.iterator(); i.hasNext(); ) {
-      Boundable child = (Boundable) i.next();
-      BoundablePair bp = new BoundablePair(child, bndOther, itemDistance);
-      // only add to queue if this pair might contain the closest points
-      // MD - it's actually faster to construct the object rather than called distance(child, bndOther)!
-      if (bp.getDistance() < minDistance) {
-        priQ.add(bp);
-      }
-    }
-  }
+	      PriorityQueue priQ, double minDistance)
+	  {
+	    List children = ((AbstractNode) bndComposite).getChildBoundables();
+	    for (Iterator i = children.iterator(); i.hasNext(); ) {
+	      Boundable child = (Boundable) i.next();
+	      BoundablePair bp = new BoundablePair(child, bndOther, itemDistance);
+	      // only add to queue if this pair might contain the closest points
+	      // MD - it's actually faster to construct the object rather than called distance(child, bndOther)!
+	      if (bp.getDistance() < minDistance) {
+	        priQ.add(bp);
+	      }
+	    }
+	  }
 }

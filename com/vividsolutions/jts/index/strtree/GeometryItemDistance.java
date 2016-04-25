@@ -61,4 +61,3 @@ implements ItemDistance
     return g1.distance(g2);    
   }
 }
-
