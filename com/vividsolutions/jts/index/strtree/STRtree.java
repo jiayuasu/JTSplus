@@ -319,9 +319,10 @@ implements SpatialIndex, Serializable
    * @param env the envelope of the query item
    * @param item the item to find the nearest neighbour of
    * @param itemDist a distance metric applicable to the items in this tree and the query item
-   * @return the nearest item in this tree
+   * @param k the K nearest items in KNN
+   * @return the K nearest items in this tree
    */
-  public Envelope[] kNearestNeighbour(Envelope env, Object item, ItemDistance itemDist,int k)
+  public Object[] kNearestNeighbour(Envelope env, Object item, ItemDistance itemDist,int k)
   {
     Boundable bnd = new ItemBoundable(env, item);
     BoundablePair bp = new BoundablePair(this.getRoot(), bnd, itemDist);
@@ -351,7 +352,7 @@ implements SpatialIndex, Serializable
   {
     return nearestNeighbour(initBndPair, Double.POSITIVE_INFINITY);
   }
-  private Envelope[] nearestNeighbour(BoundablePair initBndPair, int k) 
+  private Object[] nearestNeighbour(BoundablePair initBndPair, int k) 
   {
     return nearestNeighbour(initBndPair, Double.POSITIVE_INFINITY,k);
   }
@@ -417,7 +418,7 @@ implements SpatialIndex, Serializable
       };
   }
   
-  private Envelope[] nearestNeighbour(BoundablePair initBndPair, double maxDistance, int k) 
+  private Object[] nearestNeighbour(BoundablePair initBndPair, double maxDistance, int k) 
   {
     double distanceLowerBound = maxDistance;
     BoundablePair minPair = null;
@@ -428,7 +429,8 @@ implements SpatialIndex, Serializable
     // initialize queue
     priQ.add(initBndPair);
 
-    List<Envelope> kNearestNeighbors = new ArrayList<Envelope> ();
+    //List<Envelope> kNearestNeighbors = new ArrayList<Envelope> ();
+    List<Object> kNearestNeighbors = new ArrayList<Object> ();
     List<Double> kNearestDistances = new ArrayList<Double>();
     while (! priQ.isEmpty() && distanceLowerBound >= 0.0) {
       // pop head of queue and expand one side of pair
@@ -465,8 +467,9 @@ implements SpatialIndex, Serializable
   	            {
   	          	  position=-position-1;
   	            }
-	    	  	kNearestNeighbors.add(position,(Envelope)bndPair.getBoundable(0).getBounds());
-  	        	kNearestDistances.add(position,currentDistance); 
+	    	  	//kNearestNeighbors.add(position,(Envelope)bndPair.getBoundable(0).getBounds());
+	    	  	kNearestNeighbors.add(position,((ItemBoundable)bndPair.getBoundable(0)).getItem());
+	    	  	kNearestDistances.add(position,currentDistance); 
     	  }
     	  else if(kNearestDistances.size()>=k)
     	  {
@@ -478,8 +481,9 @@ implements SpatialIndex, Serializable
   	            {
   	          	  position=-position-1;
   	            }
-  	    	  	kNearestNeighbors.add(position,(Envelope)bndPair.getBoundable(0).getBounds());
-  	        	kNearestDistances.add(position,currentDistance); 
+  	    	  	//kNearestNeighbors.add(position,(Envelope)bndPair.getBoundable(0).getBounds());
+  	    	  	kNearestNeighbors.add(position,((ItemBoundable)bndPair.getBoundable(0)).getItem());
+  	    	  	kNearestDistances.add(position,currentDistance); 
   	        	assert kNearestNeighbors.size()>k;
   	        	kNearestNeighbors.remove(kNearestNeighbors.size()-1);
   	        	kNearestDistances.remove(kNearestDistances.size()-1);
@@ -487,7 +491,8 @@ implements SpatialIndex, Serializable
     	  }
     	  else if(kNearestDistances.size()==0)
     	  {
-    		  kNearestNeighbors.add((Envelope)bndPair.getBoundable(0).getBounds());
+    		  //kNearestNeighbors.add((Envelope)bndPair.getBoundable(0).getBounds());
+    		  kNearestNeighbors.add(((ItemBoundable)bndPair.getBoundable(0)).getItem());
     		  kNearestDistances.add(currentDistance);
     	  }
     	  else
@@ -526,7 +531,8 @@ implements SpatialIndex, Serializable
     }
     // done - return items with min distance
 
-    return kNearestNeighbors.toArray(new Envelope[kNearestNeighbors.size()]);
+    //return kNearestNeighbors.toArray(new Envelope[kNearestNeighbors.size()]);
+    return kNearestNeighbors.toArray(new Object[kNearestNeighbors.size()]);
   }
   /**
    * This method is to find the boundaries of leaf nodes.

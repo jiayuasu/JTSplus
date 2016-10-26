@@ -129,6 +129,8 @@ public class PriorityQueue
     return minItem;
   }
 
+
+  
   /**
    * Internal method to percolate down in the heap.
    * 

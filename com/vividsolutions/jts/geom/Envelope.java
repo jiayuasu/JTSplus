@@ -135,6 +135,20 @@ public class Envelope
    *  the maximum y-coordinate
    */
   private double maxy;
+  
+  
+  /**
+   * An object reference which can be used to carry ancillary data defined
+   * by the client.
+   */
+  private Object userData = null;
+  
+  
+  /**
+   * the original geometry of this envelope. It can be a point or a polygon.
+   */
+  private Geometry originalGeometry = null;
+  
 
   /**
    *  Creates a null <code>Envelope</code>.
@@ -775,5 +789,21 @@ public class Envelope
     
     
   }
+
+public Object getUserData() {
+	return userData;
+}
+
+public void setUserData(Object userData) {
+	this.userData = userData;
+}
+
+public Geometry getOriginalGeometry() {
+	return originalGeometry;
+}
+
+public void setOriginalGeometry(Geometry originalGeometry) {
+	this.originalGeometry = originalGeometry;
+}
 }
 

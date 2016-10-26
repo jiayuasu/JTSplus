@@ -1,4 +1,13 @@
 # JTSplus
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.datasyslab/JTSplus/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.datasyslab/JTSplus)
+
+JTSplus artifacts are hosted in Maven Central. You can add a Maven dependency with the following coordinates:
+
+```
+groupId: org.datasyslab
+artifactId: JTSplus
+version: 0.1.0
+```
 ## Introduction
 JTS Topology Suite 1.14 with additional functions for GeoSpark
 
