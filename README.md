@@ -48,7 +48,8 @@ strtree.insert();//Please insert spatial records. Make sure you insert Geometry 
 ...
 strtree.kNearestNeighbors(new Envelope(-98.6361828, -95.0993852,46.88333326666667,48.392923),fact.toGeometry(new Envelope(-98.6361828, -95.0993852,46.88333326666667,48.392923)),new GeometryItemDistance(), 10);
 ```
-
+## Java API usage
+Please refer to [JTS plus Java API usage](http://www.public.asu.edu/~jiayu2/jtsplus/javadoc/index.html)
 
 ## Example
 
