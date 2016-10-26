@@ -52,7 +52,7 @@ strtree.kNearestNeighbors(new Envelope(-98.6361828, -95.0993852,46.8833332666666
 
 ## Example
 
-Please refer to [PartitioningQualityAnalysis](https://github.com/jiayuasu/JTSplus/blob/master/org/datasyslab/jts/utils/PartitioningQualityAnalysis.java) java file for a detailed example.
+Please refer to [PartitioningQualityAnalysis](https://github.com/jiayuasu/JTSplus/blob/master/src/main/java/org/datasyslab/jts/utils/PartitioningQualityAnalysis.java) java file for a detailed example.
 
 ## Contributor
 [Jia Yu](http://www.public.asu.edu/~jiayu2/) (Email: jiayu2@asu.edu)
