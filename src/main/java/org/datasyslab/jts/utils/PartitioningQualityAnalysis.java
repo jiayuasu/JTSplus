@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Random;
 
 import com.vividsolutions.jts.geom.Envelope;
+import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.index.quadtree.Quadtree;
 import com.vividsolutions.jts.index.strtree.GeometryItemDistance;
@@ -109,11 +110,11 @@ public class PartitioningQualityAnalysis {
 		
 		System.out.println("Total number of test rectangles: "+totalTestRectangles/20*5+"; Sum of counters: "+sum);
 		
-		Envelope[] knn = testtree.kNearestNeighbour(new Envelope(-98.6361828, -95.0993852,46.88333326666667,48.392923),fact.toGeometry(new Envelope(-98.6361828, -95.0993852,46.88333326666667,48.392923)),new GeometryItemDistance(), 10);
+		Object[] knn = testtree.kNearestNeighbour(new Envelope(-98.6361828, -95.0993852,46.88333326666667,48.392923),fact.toGeometry(new Envelope(-98.6361828, -95.0993852,46.88333326666667,48.392923)),new GeometryItemDistance(), 10);
 		System.out.println("The K Nearest Neighbors are as follows: ");
-		for(Envelope e:knn)
+		for(Object e:knn)
 		{
-			System.out.println(e);
+			System.out.println((Geometry)e);
 		}
 	}
 
