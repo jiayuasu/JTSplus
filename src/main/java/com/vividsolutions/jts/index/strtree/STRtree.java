@@ -420,8 +420,13 @@ implements SpatialIndex, Serializable
   
   private Object[] nearestNeighbour(BoundablePair initBndPair, double maxDistance, int k) 
   {
-    double distanceLowerBound = maxDistance;
-    BoundablePair minPair = null;
+    /*
+     * This method implements the KNN algorithm described in the following paper:
+     * Roussopoulos, Nick, Stephen Kelley, and Frédéric Vincent. "Nearest neighbor queries." ACM sigmod record. Vol. 24. No. 2. ACM, 1995.
+     * We only use the minDistance and ignore minmaxDistance.
+     */
+	  
+	double distanceLowerBound = maxDistance;
     
     // initialize internal structures
     PriorityQueue priQ = new PriorityQueue();
@@ -429,9 +434,8 @@ implements SpatialIndex, Serializable
     // initialize queue
     priQ.add(initBndPair);
 
-    //List<Envelope> kNearestNeighbors = new ArrayList<Envelope> ();
-    List<Object> kNearestNeighbors = new ArrayList<Object> ();
-    List<Double> kNearestDistances = new ArrayList<Double>();
+    java.util.PriorityQueue<BoundablePair> kNearestNeighbors = new java.util.PriorityQueue<BoundablePair>(k, new BoundablePairComparator(false));
+
     while (! priQ.isEmpty() && distanceLowerBound >= 0.0) {
       // pop head of queue and expand one side of pair
       BoundablePair bndPair = (BoundablePair) priQ.poll();
@@ -445,8 +449,9 @@ implements SpatialIndex, Serializable
        * So the current minDistance must be the true minimum,
        * and we are done.
        */
-
-      if (currentDistance >= distanceLowerBound && kNearestDistances.size()>=k){
+      
+      
+      if (currentDistance >= distanceLowerBound){
     	  break;  
       }
       /**
@@ -459,58 +464,23 @@ implements SpatialIndex, Serializable
       if (bndPair.isLeaves()) {
         // assert: currentDistance < minimumDistanceFound
     	
-        //distanceLowerBound = currentDistance;
-    	  if(kNearestDistances.size()>0 && kNearestDistances.size()<k){
-
-    		  int position=Collections.binarySearch(kNearestDistances, currentDistance);
-	    	  	if(position<0)
-  	            {
-  	          	  position=-position-1;
-  	            }
-	    	  	//kNearestNeighbors.add(position,(Envelope)bndPair.getBoundable(0).getBounds());
-	    	  	kNearestNeighbors.add(position,((ItemBoundable)bndPair.getBoundable(0)).getItem());
-	    	  	kNearestDistances.add(position,currentDistance); 
-    	  }
-    	  else if(kNearestDistances.size()>=k)
-    	  {
-
-  	  		if(currentDistance<kNearestDistances.get(kNearestDistances.size()-1))
-  	  		{
-  	  			int position=Collections.binarySearch(kNearestDistances, currentDistance);
-  	    	  	if(position<0)
-  	            {
-  	          	  position=-position-1;
-  	            }
-  	    	  	//kNearestNeighbors.add(position,(Envelope)bndPair.getBoundable(0).getBounds());
-  	    	  	kNearestNeighbors.add(position,((ItemBoundable)bndPair.getBoundable(0)).getItem());
-  	    	  	kNearestDistances.add(position,currentDistance); 
-  	        	assert kNearestNeighbors.size()>k;
-  	        	kNearestNeighbors.remove(kNearestNeighbors.size()-1);
-  	        	kNearestDistances.remove(kNearestDistances.size()-1);
-  	  		}
-    	  }
-    	  else if(kNearestDistances.size()==0)
-    	  {
-    		  //kNearestNeighbors.add((Envelope)bndPair.getBoundable(0).getBounds());
-    		  kNearestNeighbors.add(((ItemBoundable)bndPair.getBoundable(0)).getItem());
-    		  kNearestDistances.add(currentDistance);
+    	  if(kNearestNeighbors.size()<k){
+	    	  	kNearestNeighbors.add(bndPair);
     	  }
     	  else
     	  {
-    		  try {
-				throw new Exception("Should never reach here");
-			} catch (Exception e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-    	  }
-     	  	   	  
-    	 
-        distanceLowerBound = kNearestDistances.get(kNearestDistances.size()-1);
-        //System.out.println("distanceLowerBound is " + distanceLowerBound);
-        
-        
 
+    		  if(kNearestNeighbors.peek().getDistance()>currentDistance)
+    		  {
+    			  kNearestNeighbors.poll();
+    			  kNearestNeighbors.add(bndPair);
+    		  }
+    		  /*
+    		   * minDistance should be the farthest point in the K nearest neighbor queue.
+    		   */
+    		  distanceLowerBound = kNearestNeighbors.peek().getDistance();
+
+    	  }        
       }
       else {
         // testing - does allowing a tolerance improve speed?
@@ -531,8 +501,15 @@ implements SpatialIndex, Serializable
     }
     // done - return items with min distance
 
-    //return kNearestNeighbors.toArray(new Envelope[kNearestNeighbors.size()]);
-    return kNearestNeighbors.toArray(new Object[kNearestNeighbors.size()]);
+    Object[] result = new Object[kNearestNeighbors.size()];
+    Iterator<BoundablePair> resultIterator = kNearestNeighbors.iterator();
+    int count=0;
+    while(resultIterator.hasNext())
+    {
+    	result[count]=((ItemBoundable)resultIterator.next().getBoundable(0)).getItem();
+    	count++;
+    }
+    return result;
   }
   /**
    * This method is to find the boundaries of leaf nodes.

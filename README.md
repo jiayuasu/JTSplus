@@ -6,13 +6,22 @@ JTSplus artifacts are hosted in Maven Central. You can add a Maven dependency wi
 ```
 groupId: org.datasyslab
 artifactId: JTSplus
-version: 0.1.0
+version: 0.1.1
 ```
 ## Introduction
 JTS Topology Suite 1.14 with additional functions for GeoSpark
 
 1. Spatial data partitioning: Add a function in STR-Tree and Quad-Tree to return the leaf nodes bounding envelopes as the boundaries of spatial partitions. 
 2. KNN query: Add K Nearest Neighbors in STR-Tree implementation. 
+
+
+##  Version information
+
+
+|      Version     	| Summary                                                                                                                                                                                                               	|
+|:----------------:	|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------	|
+| 0.1.1| Bug fix: Fix the inaccurate STR-Tree KNN result when K is large |
+| 0.1.0| Initial release|
 
 ## Functions usage
 
