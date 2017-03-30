@@ -141,7 +141,7 @@ public class Envelope
    * An object reference which can be used to carry ancillary data defined
    * by the client.
    */
-  private Object userData = null;
+  private Object userData = "";
   
   
   /**
@@ -744,6 +744,7 @@ public class Envelope
       return false;
     }
     Envelope otherEnvelope = (Envelope) other;
+    if(!userData.equals(otherEnvelope.getUserData())) return false;
     if (isNull()) {
       return otherEnvelope.isNull();
     }
