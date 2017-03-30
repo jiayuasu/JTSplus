@@ -6,7 +6,7 @@ JTSplus artifacts are hosted in Maven Central. You can add a Maven dependency wi
 ```
 groupId: org.datasyslab
 artifactId: JTSplus
-version: 0.1.1
+version: 0.1.2
 ```
 ## Introduction
 JTS Topology Suite 1.14 with additional functions for GeoSpark
@@ -20,6 +20,7 @@ JTS Topology Suite 1.14 with additional functions for GeoSpark
 
 |      Version     	| Summary                                                                                                                                                                                                               	|
 |:----------------:	|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------	|
+| 0.1.2| Bug fix: Fix inaccurate equals function. JTS doesn't consider "UserData" when checking the equality between two geometries|
 | 0.1.1| Bug fix: Fix the inaccurate STR-Tree KNN result when K is large |
 | 0.1.0| Initial release|
 
