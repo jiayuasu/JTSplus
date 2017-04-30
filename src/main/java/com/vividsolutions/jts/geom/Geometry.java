@@ -1133,6 +1133,7 @@ public abstract class Geometry
   }
   
   public String toString() {
+	if(this.userData!=null && this.userData!="") return toText()+"\t"+this.userData;
     return toText();
   }
 
