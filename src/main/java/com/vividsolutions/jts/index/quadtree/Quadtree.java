@@ -280,5 +280,9 @@ public List queryBoundary()
   	return grids;
   }
 
+  public Root getRoot(){
+    return root;
+  }
+
 
 }
