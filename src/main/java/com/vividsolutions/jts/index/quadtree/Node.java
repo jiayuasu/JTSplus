@@ -79,6 +79,8 @@ public class Node
 
   public Envelope getEnvelope() { return env; }
 
+  public int getLevel() { return level; }
+
   protected boolean isSearchMatch(Envelope searchEnv)
   {
     return env.intersects(searchEnv);

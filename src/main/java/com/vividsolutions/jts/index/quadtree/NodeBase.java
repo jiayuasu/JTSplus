@@ -88,6 +88,12 @@ public abstract class NodeBase implements Serializable {
 
   public List getItems() { return items; }
 
+  public void setItems(List items) { this.items = items; }
+
+  public Node[] getSubnode(){
+    return subnode;
+  }
+
   public boolean hasItems() { return ! items.isEmpty(); }
 
   public void add(Object item)
