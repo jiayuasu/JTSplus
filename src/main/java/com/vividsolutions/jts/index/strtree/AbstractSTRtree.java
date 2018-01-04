@@ -183,12 +183,32 @@ public abstract class AbstractSTRtree implements Serializable {
     return root; 
   }
 
-  /**
+    public void setRoot(AbstractNode root) {
+        this.root = root;
+    }
+
+    /**
    * Returns the maximum number of child nodes that a node may have
    */
   public int getNodeCapacity() { return nodeCapacity; }
 
-  /**
+
+  public ArrayList getItemBoundables() { return itemBoundables; }
+
+
+    public void setItemBoundables(ArrayList itemBoundables) {
+        this.itemBoundables = itemBoundables;
+    }
+
+    public boolean isBuilt() {
+        return built;
+    }
+
+    public void setBuilt(boolean built) {
+        this.built = built;
+    }
+
+    /**
    * Tests whether the index contains any items.
    * This method does not build the index,
    * so items can still be inserted after it has been called.
