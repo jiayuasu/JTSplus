@@ -81,6 +81,10 @@ public abstract class AbstractNode implements Boundable, Serializable {
     return childBoundables;
   }
 
+  public void setChildBoundables(ArrayList childBoundables) {
+    this.childBoundables = childBoundables;
+  }
+
   /**
    * Returns a representation of space that encloses this Boundable,
    * preferably not much bigger than this Boundable's boundary yet fast to
