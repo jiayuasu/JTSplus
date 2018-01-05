@@ -6,7 +6,7 @@ JTSplus artifacts are hosted in Maven Central. You can add a Maven dependency wi
 ```
 groupId: org.datasyslab
 artifactId: JTSplus
-version: 0.1.3
+version: 0.1.4
 ```
 ## Introduction
 JTS Topology Suite 1.14 with additional functions for GeoSpark
@@ -20,6 +20,7 @@ JTS Topology Suite 1.14 with additional functions for GeoSpark
 
 |      Version     	| Summary                                                                                                                                                                                                               	|
 |:----------------:	|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------	|
+| 0.1.4| Minor changes: Prepare for GeoSpark Spatial Index customized serializer: (1) Add additional getter and setter for spatial index. (2) Set some index fields as "Public". |
 | 0.1.3| Geometry toString() appends UserData to Geometry WKT String. Separated by tab.|
 | 0.1.2| Bug fix: Fix inaccurate equals function. JTS doesn't consider "UserData" when checking the equality between two geometries|
 | 0.1.1| Bug fix: Fix the inaccurate STR-Tree KNN result when K is large |
@@ -66,7 +67,7 @@ Please refer to [JTS plus Java API usage](http://www.public.asu.edu/~jiayu2/jtsp
 
 Please refer to [PartitioningQualityAnalysis](https://github.com/jiayuasu/JTSplus/blob/master/src/main/java/org/datasyslab/jts/utils/PartitioningQualityAnalysis.java) java file for a detailed example.
 
-## Contributor
+## Contact
 [Jia Yu](http://www.public.asu.edu/~jiayu2/) (Email: jiayu2@asu.edu)
 
 [Mohamed Sarwat](http://faculty.engineering.asu.edu/sarwat/) (Email: msarwat@asu.edu)

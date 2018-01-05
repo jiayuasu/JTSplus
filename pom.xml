@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.datasyslab</groupId>
 	<artifactId>JTSplus</artifactId>
-	<version>0.1.3</version>
+	<version>0.1.4</version>
 	
 	<name>${project.groupId}:${project.artifactId}</name>
 	<description>JTS Topology Suite 1.14 with additional functions for GeoSpark</description>
